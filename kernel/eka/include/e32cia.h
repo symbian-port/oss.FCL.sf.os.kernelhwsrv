@@ -28,7 +28,7 @@
 
 // CIA symbols for USER side code
 // CIA symbol macros for Gcc98r2
-#if defined(__GCC32__)
+#if defined(__GCC32__) && !defined(__EABI__)
 #define CSM_ZN4Exec12PopTrapFrameEv " PopTrapFrame__4Exec"
 #define CSM_ZN4User7ReAllocEPvii " ReAlloc__4UserPvii"
 #define CSM_Z30PanicCObjectConIndexOutOfRangev " PanicCObjectConIndexOutOfRange__Fv"
@@ -134,7 +134,7 @@
 
 // CIA symbols for KERNEL side code
 // CIA symbol macros for Gcc98r2
-#if defined(__GCC32__)
+#if defined(__GCC32__) && !defined(__EABI__)
 #define CSM_ZN1K8MsgInfoE " _1K.MsgInfo"
 #define CSM_ZN14NFastSemaphore6SignalEv " Signal__14NFastSemaphore"
 #define CSM_ZN4Kern4ExitEi " Exit__4Kerni"
@@ -470,7 +470,7 @@
 
 // CIA symbols for COMMON code (used both USER and KERNEL side)
 // CIA symbol macros for Gcc98r2
-#if defined(__GCC32__)
+#if defined(__GCC32__) && !defined(__EABI__)
 #define CSM_CFUNC(f)	#f
 #define CSM_Z26Des16PanicLengthOutOfRangev " Des16PanicLengthOutOfRange__Fv"
 #define CSM_Z20Des8PanicDesOverflowv " Des8PanicDesOverflow__Fv"
@@ -540,18 +540,18 @@
 #define CSM_Z26Des16PanicLengthOutOfRangev " _Z26Des16PanicLengthOutOfRangev"
 #define CSM_Z20Des8PanicDesOverflowv " _Z20Des8PanicDesOverflowv"
 #define CSM_ZN10RArrayBase4GrowEv " _ZN10RArrayBase4GrowEv"
-#define CSM_ZN3Mem8CompareCEPKtiS0_i " _ZN3Mem8CompareCEPKtiS0_i"
+#define CSM_ZN3Mem8CompareCEPKtiS0_i " _ZN3Mem8CompareCEPKtiS1_i"
 #define CSM_Z20Des16PanicBadDesTypev " _Z20Des16PanicBadDesTypev"
 #define CSM_Z24Des16PanicLengthNegativev " _Z24Des16PanicLengthNegativev"
 #define CSM_Z19Des8PanicBadDesTypev " _Z19Des8PanicBadDesTypev"
-#define CSM_ZN3Mem7CompareEPKtiS0_i " _ZN3Mem7CompareEPKtiS0_i"
+#define CSM_ZN3Mem7CompareEPKtiS0_i " _ZN3Mem7CompareEPKtiS1_i"
 #define CSM_Z23Des8PanicLengthNegativev " _Z23Des8PanicLengthNegativev"
 #define CSM_ZN17RPointerArrayBase4GrowEv " _ZN17RPointerArrayBase4GrowEv"
 #define CSM_Z28Des16PanicDesIndexOutOfRangev " _Z28Des16PanicDesIndexOutOfRangev"
-#define CSM_ZN3Mem8CompareFEPKhiS0_i " _ZN3Mem8CompareFEPKhiS0_i"
+#define CSM_ZN3Mem8CompareFEPKhiS0_i " _ZN3Mem8CompareFEPKhiS1_i"
 #define CSM_Z5Panic9TCdtPanic " _Z5Panic9TCdtPanic"
 #define CSM_Z27Des8PanicDesIndexOutOfRangev " _Z27Des8PanicDesIndexOutOfRangev"
-#define CSM_ZN3Mem8CompareFEPKtiS0_i " _ZN3Mem8CompareFEPKtiS0_i"
+#define CSM_ZN3Mem8CompareFEPKtiS0_i " _ZN3Mem8CompareFEPKtiS1_i"
 #define CSM_Z26Des8PanicMaxLengthNegativev " _Z26Des8PanicMaxLengthNegativev"
 #define CSM_Z25Des8PanicLengthOutOfRangev " _Z25Des8PanicLengthOutOfRangev"
 #define CSM_Z21Des16PanicDesOverflowv " _Z21Des16PanicDesOverflowv"
@@ -559,7 +559,7 @@
 #define CSM_Z18PanicBadArrayIndexv " _Z18PanicBadArrayIndexv"
 #define CSM_Z22Des8PanicPosOutOfRangev " _Z22Des8PanicPosOutOfRangev"
 #define CSM_Z23Des16PanicPosOutOfRangev " _Z23Des16PanicPosOutOfRangev"
-#define CSM_ZN3Mem8CompareCEPKhiS0_i " _ZN3Mem8CompareCEPKhiS0_i"
+#define CSM_ZN3Mem8CompareCEPKhiS0_i " _ZN3Mem8CompareCEPKhiS1_i"
 #define CSM_Z22RHeap_PanicBadNextCellv " _Z22RHeap_PanicBadNextCellv"
 #define CSM_Z30PanicEWordMoveSourceNotAlignedv " _Z30PanicEWordMoveSourceNotAlignedv"
 #define CSM_Z30PanicEWordMoveTargetNotAlignedv " _Z30PanicEWordMoveTargetNotAlignedv"

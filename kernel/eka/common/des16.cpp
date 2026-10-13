@@ -2012,7 +2012,7 @@ Data can, subsequently, be assigned into it using the assignment operators.
 */
 	{
 	__ASSERT_ALWAYS(aMaxLength>=0,Panic(ETDes16MaxLengthNegative));
-	return new(STD_CLASS::Alloc(_FOFF(HBufC16,iBuf[aMaxLength]))) HBufC16(0);
+	return new(STD_CLASS::Alloc(_FOFF_DYNAMIC(HBufC16,iBuf[aMaxLength]))) HBufC16(0);
 	}
 
 EXPORT_C HBufC16 *HBufC16::NewL(TInt aMaxLength)
@@ -2091,7 +2091,7 @@ Data can, subsequently, be assigned into it using the assignment operators.
 */
 	{
 	__ASSERT_ALWAYS(aMaxLength>=0,Panic(ETDes16MaxLengthNegative));
-	return new(STD_CLASS::Alloc(_FOFF(HBufC16,iBuf[aMaxLength]))) HBufC16(aMaxLength);
+	return new(STD_CLASS::Alloc(_FOFF_DYNAMIC(HBufC16,iBuf[aMaxLength]))) HBufC16(aMaxLength);
 	}
 
 EXPORT_C HBufC16 *HBufC16::NewMaxL(TInt aMaxLength)
@@ -5806,5 +5806,17 @@ GLDEF_C void Des16PanicDesIndexOutOfRange()
 	{
 	Panic(ETDes16IndexOutOfRange);
 	}
+#endif
+
+#if defined(__GCCE__) || defined(__GCC32__)
+extern "C" {
+void Des16PanicBadDesType__Fv() { Des16PanicBadDesType(); }
+void Des16PanicPosOutOfRange__Fv() { Des16PanicPosOutOfRange(); }
+void Des16PanicLengthNegative__Fv() { Des16PanicLengthNegative(); }
+void Des16PanicMaxLengthNegative__Fv() { Des16PanicMaxLengthNegative(); }
+void Des16PanicLengthOutOfRange__Fv() { Des16PanicLengthOutOfRange(); }
+void Des16PanicDesOverflow__Fv() { Des16PanicDesOverflow(); }
+void Des16PanicDesIndexOutOfRange__Fv() { Des16PanicDesIndexOutOfRange(); }
+}
 #endif
 

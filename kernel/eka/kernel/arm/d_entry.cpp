@@ -25,8 +25,13 @@ extern "C" {
 
 typedef void (*PFV)();
 
+#if defined(__EABI__)
+static const PFV __CTOR_LIST__[] = { (PFV)0, (PFV)0 };
+static const PFV __DTOR_LIST__[] = { (PFV)0, (PFV)0 };
+#else
 extern PFV __CTOR_LIST__[];
 extern PFV __DTOR_LIST__[];
+#endif
 
 GLDEF_C TInt _E32Dll_Body(TInt aReason)
 //
