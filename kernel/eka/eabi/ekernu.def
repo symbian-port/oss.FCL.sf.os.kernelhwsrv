@@ -662,34 +662,34 @@ EXPORTS
 	_Znwj @ 661 NONAME
 	_ZnwjRKSt9nothrow_t @ 662 NONAME
 	_Znwjj @ 663 NONAME
-	__aeabi_idiv0 @ 664 NONAME
-	__aeabi_idivmod @ 665 NONAME
-	__aeabi_lasr @ 666 NONAME
-	__aeabi_lcmp @ 667 NONAME
-	__aeabi_ldiv0 @ 668 NONAME
-	__aeabi_ldivmod @ 669 NONAME
-	__aeabi_llsl @ 670 NONAME
-	__aeabi_llsr @ 671 NONAME
-	__aeabi_lmul @ 672 NONAME
-	__aeabi_memclr @ 673 NONAME
-	__aeabi_memclr4 @ 674 NONAME
-	__aeabi_memclr8 @ 675 NONAME
-	__aeabi_memcpy @ 676 NONAME
-	__aeabi_memcpy4 @ 677 NONAME
-	__aeabi_memcpy8 @ 678 NONAME
-	__aeabi_memmove @ 679 NONAME
-	__aeabi_memmove4 @ 680 NONAME
-	__aeabi_memmove8 @ 681 NONAME
-	__aeabi_memset @ 682 NONAME
-	__aeabi_memset4 @ 683 NONAME
-	__aeabi_memset8 @ 684 NONAME
-	__aeabi_uidivmod @ 685 NONAME
-	__aeabi_ulcmp @ 686 NONAME
-	__aeabi_uldivmod @ 687 NONAME
-	__aeabi_uread4 @ 688 NONAME
-	__aeabi_uread8 @ 689 NONAME
-	__aeabi_uwrite4 @ 690 NONAME
-	__aeabi_uwrite8 @ 691 NONAME
+	__aeabi_idiv0 @ 664 NONAME ABSENT
+	__aeabi_idivmod @ 665 NONAME ABSENT
+	__aeabi_lasr @ 666 NONAME ABSENT
+	__aeabi_lcmp @ 667 NONAME ABSENT
+	__aeabi_ldiv0 @ 668 NONAME ABSENT
+	__aeabi_ldivmod @ 669 NONAME ABSENT
+	__aeabi_llsl @ 670 NONAME ABSENT
+	__aeabi_llsr @ 671 NONAME ABSENT
+	__aeabi_lmul @ 672 NONAME ABSENT
+	__aeabi_memclr @ 673 NONAME ABSENT
+	__aeabi_memclr4 @ 674 NONAME ABSENT
+	__aeabi_memclr8 @ 675 NONAME ABSENT
+	__aeabi_memcpy @ 676 NONAME ABSENT
+	__aeabi_memcpy4 @ 677 NONAME ABSENT
+	__aeabi_memcpy8 @ 678 NONAME ABSENT
+	__aeabi_memmove @ 679 NONAME ABSENT
+	__aeabi_memmove4 @ 680 NONAME ABSENT
+	__aeabi_memmove8 @ 681 NONAME ABSENT
+	__aeabi_memset @ 682 NONAME ABSENT
+	__aeabi_memset4 @ 683 NONAME ABSENT
+	__aeabi_memset8 @ 684 NONAME ABSENT
+	__aeabi_uidivmod @ 685 NONAME ABSENT
+	__aeabi_ulcmp @ 686 NONAME ABSENT
+	__aeabi_uldivmod @ 687 NONAME ABSENT
+	__aeabi_uread4 @ 688 NONAME ABSENT
+	__aeabi_uread8 @ 689 NONAME ABSENT
+	__aeabi_uwrite4 @ 690 NONAME ABSENT
+	__aeabi_uwrite8 @ 691 NONAME ABSENT
 	__aeabi_vec_cctor_nocookie_nodtor @ 692 NONAME
 	__aeabi_vec_ctor_cookie_nodtor @ 693 NONAME
 	__aeabi_vec_ctor_nocookie_nodtor @ 694 NONAME

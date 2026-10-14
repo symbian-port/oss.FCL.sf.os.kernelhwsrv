@@ -26,7 +26,7 @@ extern "C" void __division_by_zero()
 	DIVISION_BY_ZERO();
     }
 
-#ifdef __GCCV3__
+#if defined(__GCCV3__) || defined(__EABI__) || defined(__GCCE__) || (__GNUC__ >= 3)
 EXPORT_C int __cxa_pure_virtual()
 #else
 EXPORT_C int __pure_virtual()

@@ -120,7 +120,7 @@ class DShBuf;
 // Executive call macros for ARM
 
 #define	FAST_EXEC_BEGIN	\
-	__NAKED__ void dummy_function_for_exec_tables() {	\
+	__NAKED__ __attribute__((optimize("O0"))) void dummy_function_for_exec_tables() {	\
 		asm(".global EpocFastExecTable ");				\
 		asm("EpocFastExecTable: ");
 

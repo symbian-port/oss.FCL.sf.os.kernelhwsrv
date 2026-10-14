@@ -439,6 +439,7 @@ __NAKED__ EXPORT_C TBool BTrace::OutBig(TUint32 a0, TUint32 a1, const TAny* aDat
 
 __NAKED__ TBool DBTraceFilter2::Check(TUint32 aUid)
 	{
+	asm("DBTraceFilter2_Check: ");
 	asm("stmdb	sp!, {lr}");
 	asm("ldr	r3, [r0,#%a0]" : : "i" _FOFF(DBTraceFilter2,iNumUids));
 	asm("add	r0, r0, #%a0" : : "i" _FOFF(DBTraceFilter2,iUids));
@@ -501,7 +502,7 @@ __NAKED__ TBool SBTraceData::CheckFilter2(TUint32 aUid)
 
 
 	asm("mov	r6, r0");
-	asm("bl		Check__14DBTraceFilter2Ul");
+	asm("bl		DBTraceFilter2_Check");
 	// r0 = result
 
 

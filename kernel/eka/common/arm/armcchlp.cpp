@@ -44,6 +44,22 @@ EXPORT_C int __cxa_pure_virtual()
 	return 0;
 	}
 
+EXPORT_C int __cxa_guard_acquire(int* aGuard)
+	{
+	if (*(char*)aGuard == 0)
+		return 1;
+	return 0;
+	}
+
+EXPORT_C void __cxa_guard_release(int* aGuard)
+	{
+	*(char*)aGuard = 1;
+	}
+
+EXPORT_C void __cxa_guard_abort(int* /*aGuard*/)
+	{
+	}
+
 #ifdef __KERNEL_MODE__
 
 void __cxa_end_catch(){}
@@ -58,6 +74,23 @@ void __cxa_call_unexpected() {}
 void __aeabi_unwind_cpp_pr0() {}
 
 void __cxa_end_cleanup() {}
+
+#if defined(__GCCE__) || defined(__EABI__)
+extern "C" {
+__attribute__((visibility("default"))) const void* _ZTVN10__cxxabiv117__class_type_infoE[8] = { 0 };
+__attribute__((visibility("default"))) const void* _ZTVN10__cxxabiv120__si_class_type_infoE[8] = { 0 };
+__attribute__((visibility("default"))) const void* _ZTVN10__cxxabiv121__vmi_class_type_infoE[8] = { 0 };
+
+EXPORT_C void abort()
+{
+#ifdef __STANDALONE_NANOKERNEL__
+	__NK_ASSERT_ALWAYS(0);
+#else
+	Panic(EPureVirtualCalled);
+#endif
+}
+}
+#endif
 
 #endif
 }

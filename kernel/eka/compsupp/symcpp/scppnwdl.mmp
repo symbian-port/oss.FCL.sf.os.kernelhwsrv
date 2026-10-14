@@ -19,6 +19,7 @@
 TARGET 			scppnwdl.dll
 
 TARGETTYPE		dll
+VERSION			0.0
 
 OPTION ARMCC	--no_exceptions --no_exceptions_unwind
 

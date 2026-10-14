@@ -119,7 +119,7 @@ existing content.
 
 
 
-#if !(defined(__GCC32__) && defined(__MARM__))
+#if !(defined(__GCC32__) && !defined(__GCCE__) && defined(__MARM__))
 inline TInt Mem::Compare(const TUint8* aLeft, TInt aLeftL, const TUint8* aRight, TInt aRightL)
 /**
 Compares a block of data at one specified location with a block of data at 
@@ -993,7 +993,7 @@ is undefined.
 template <class T>
 inline TSglQueIter<T>::operator T *()
 /**
-Gets a pointer to the iterator’s current element.
+Gets a pointer to the iteratorÂ’s current element.
 
 The operator is normally used implicitly; e.g. some member functions of the
 list header class TSglQue require a pointer to an element (of type class T)
@@ -1070,7 +1070,7 @@ otherwise the result is undefined.
 template <class T>
 inline TDblQueIter<T>::operator T *()
 /**
-Gets a pointer to the iterator’s current element.
+Gets a pointer to the iteratorÂ’s current element.
 
 The operator is normally used implicitly; e.g. some member functions of the
 list header class TDblQue require a pointer to an element (of type class T)
@@ -3604,7 +3604,7 @@ inline TFindLibrary::TFindLibrary()
 /**
 Constructs this object with a default match pattern.
 
-The default match pattern is the single character ‘*’ and is implemented by
+The default match pattern is the single character Â‘*Â’ and is implemented by
 the base class TFindHandleBase.
 */
     {}

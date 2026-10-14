@@ -511,7 +511,11 @@ __NAKED__ EXPORT_C TPtr8 TDes8::MidTPtr(TInt /*aPos*/) const
 	__JUMP(,lr);
 	}
 
+#if defined(__GCCE__)
+extern "C" EXPORT_C __NAKED__ void _ZNK5TDes87MidTPtrEii(void)
+#else
 __NAKED__ EXPORT_C TPtr8 TDes8::MidTPtr(TInt /*aPos*/,TInt /*aLength*/) const
+#endif
 //
 // Extract the middle portion of the descriptor.
 //
@@ -868,7 +872,11 @@ __NAKED__ EXPORT_C TPtrC8 TDesC8::Mid(TInt /*aPos*/) const
 	__JUMP(,lr);
 	}
 
+#if defined(__GCCE__)
+extern "C" EXPORT_C __NAKED__ void _ZNK6TDesC83MidEii(void)
+#else
 __NAKED__ EXPORT_C TPtrC8 TDesC8::Mid(TInt /*aPos*/,TInt /*aLength*/) const
+#endif
 //
 // Extract the middle portion of the descriptor.
 //

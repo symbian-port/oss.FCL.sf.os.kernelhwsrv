@@ -19,7 +19,7 @@
 #define __UCSTD_H__
 #include <e32def.h>
 
-#ifdef __GCC32__
+#if defined(__GCC32__) && !defined(__EABI__)
 
 #define	_CBASE_VPTR_OFFSET_				0
 

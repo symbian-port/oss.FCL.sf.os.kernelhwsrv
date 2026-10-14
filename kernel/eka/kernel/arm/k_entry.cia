@@ -58,6 +58,21 @@ GLDEF_C __NAKED__ void _E32Startup(TLinAddr /*aRomHeader*/, TLinAddr /*aSuperPag
 	SET_RWRW_TID(,r0);
 #endif
 
+#if defined(__EABI__) || defined(__ARM_EABI__)
+	asm(".weak SHT$$INIT_ARRAY$$Base ");
+	asm(".weak SHT$$INIT_ARRAY$$Limit ");
+	asm("ldr r4, =SHT$$INIT_ARRAY$$Base ");
+	asm("ldr r5, =SHT$$INIT_ARRAY$$Limit ");
+	asm("2: ");
+	asm("cmp r4, r5 ");
+	asm("bhs 3f ");
+	asm("ldr r0, [r4] ");
+	asm("add r0, r0, r4 ");
+	asm("add r4, r4, #4 ");
+	asm("blx r0 ");
+	asm("b 2b ");
+	asm("3: ");
+#else
 	asm("ldr r4, __CtorList ");
 	
 	asm("1: ");
@@ -65,11 +80,14 @@ GLDEF_C __NAKED__ void _E32Startup(TLinAddr /*aRomHeader*/, TLinAddr /*aSuperPag
 	asm("adr lr, 1b ");
 	asm("cmp r0, #0 ");
 	__JUMP(ne,r0);
+#endif
 
 	asm("b KernelMain ");
 
+#if !defined(__EABI__) && !defined(__ARM_EABI__)
 	asm("__CtorList: ");
 	asm(".word __CTOR_LIST__ ");
+#endif
 	}
 #elif defined(__ARMCC__)
 void __DLL_Export_Table__(void);

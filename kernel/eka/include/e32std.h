@@ -1071,7 +1071,7 @@ public:
 
     For example, a value of 1 causes the number 1000 to be represented by the
     characters "1,000" whereas a value of 4 causes the same number to be
-    represented by the characters "1000" (This assumes the ‘,’ triad separation
+    represented by the characters "1000" (This assumes the Â‘,Â’ triad separation
     character).
 
     Note that no triad separation occurs if the flag KDoNotUseTriads is set in
@@ -4609,7 +4609,7 @@ public:
 	inline static TUint8* Move(TAny* aTrg, const TAny* aSrc, TInt aLength);
 	inline static void Fill(TAny* aTrg, TInt aLength, TChar aChar);
 	inline static void FillZ(TAny* aTrg, TInt aLength);
-#ifndef __GCC32__
+#if !defined(__GCC32__) || defined(__GCCE__)
 	inline static TInt Compare(const TUint8* aLeft, TInt aLeftL, const TUint8* aRight, TInt aRightL);
 #else
 	IMPORT_C static TInt Compare(const TUint8* aLeft, TInt aLeftL, const TUint8* aRight, TInt aRightL);

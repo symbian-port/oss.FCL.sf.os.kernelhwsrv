@@ -23,12 +23,10 @@ extern "C" {
 
 #if defined(__GCC32__)
 
-typedef void (*PFV)();
-
-#if defined(__EABI__)
-static const PFV __CTOR_LIST__[] = { (PFV)0, (PFV)0 };
-static const PFV __DTOR_LIST__[] = { (PFV)0, (PFV)0 };
+#if defined(__EABI__) || defined(__ARM_EABI__)
+extern "C" void __call_init_array();
 #else
+typedef void (*PFV)();
 extern PFV __CTOR_LIST__[];
 extern PFV __DTOR_LIST__[];
 #endif
@@ -40,16 +38,22 @@ GLDEF_C TInt _E32Dll_Body(TInt aReason)
 	{
 	if (aReason==KModuleEntryReasonProcessDetach)
 		{
+#if !defined(__EABI__) && !defined(__ARM_EABI__)
 		TUint i=1;
 		while (__DTOR_LIST__[i])
 			(*__DTOR_LIST__[i++])();
+#endif
 		return KErrNone;
 		}
 	if (aReason==KModuleEntryReasonExtensionInit1 || aReason==KModuleEntryReasonProcessAttach)
 		{
+#if defined(__EABI__) || defined(__ARM_EABI__)
+		__call_init_array();
+#else
 		TUint i=1;
 		while (__CTOR_LIST__[i])
 			(*__CTOR_LIST__[i++])();
+#endif
 		}
 	return KernelModuleEntry(aReason);
 	}

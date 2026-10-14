@@ -74,5 +74,43 @@ __NAKED__ TInt _E32Dll(TInt /*aReason*/)
 #endif
 #endif
 	}
+
+#if defined(__GCC32__) && (defined(__EABI__) || defined(__ARM_EABI__))
+__NAKED__ void __call_init_array()
+	{
+	asm(".weak SHT$$INIT_ARRAY$$Base ");
+	asm(".weak SHT$$INIT_ARRAY$$Limit ");
+	asm("push {r4, r5, r6, lr} ");
+	asm("ldr r4, =SHT$$INIT_ARRAY$$Base ");
+	asm("ldr r5, =SHT$$INIT_ARRAY$$Limit ");
+	asm("cmp r4, #0 ");
+	asm("beq 2f ");
+	asm("cmp r5, #0 ");
+	asm("beq 2f ");
+	asm("1: ");
+	asm("cmp r4, r5 ");
+	asm("bhs 2f ");
+	asm("ldr r0, [r4] ");
+	asm("add r0, r0, r4 ");
+	asm("add r4, r4, #4 ");
+	asm("blx r0 ");
+	asm("b 1b ");
+	asm("2: ");
+	asm("pop {r4, r5, r6, pc} ");
+	}
+asm(".section .rodata\n"
+    ".align 2\n"
+    ".global Symbian$$CPP$$Exception$$Descriptor\n"
+    ".type Symbian$$CPP$$Exception$$Descriptor, %object\n"
+    "Symbian$$CPP$$Exception$$Descriptor:\n"
+    ".word .ARM.exidx$$Base\n"
+    ".word .ARM.exidx$$Limit\n"
+    ".word Image$$ER_RO$$Base + 1\n"
+    ".word Image$$ER_RO$$Limit\n"
+    ".word 0\n"
+    ".text\n"
+);
+#endif
+
 }
 

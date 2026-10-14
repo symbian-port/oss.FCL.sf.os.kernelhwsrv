@@ -24,20 +24,22 @@ GLREF_C TInt E32Main();
 extern "C" {
 
 #if defined(__GCC32__)
-typedef void (*PFV)();
-#if defined(__EABI__)
-static const PFV __CTOR_LIST__[] = { (PFV)0, (PFV)0 };
-static const PFV __DTOR_LIST__[] = { (PFV)0, (PFV)0 };
+
+#if defined(__EABI__) || defined(__ARM_EABI__)
+extern "C" void __call_init_array();
 #else
+typedef void (*PFV)();
 extern PFV __CTOR_LIST__[];
 extern PFV __DTOR_LIST__[];
 #endif
 
 void globalDestructorFunc()
 	{
+#if !defined(__EABI__) && !defined(__ARM_EABI__)
 	TUint i=1;
 	while (__DTOR_LIST__[i])
 		(*__DTOR_LIST__[i++])();
+#endif
 	}
 
 void RunThread(TBool aNotFirst, SThreadCreateInfo& aInfo)
@@ -64,9 +66,13 @@ void RunThread(TBool aNotFirst, SThreadCreateInfo& aInfo)
 			User::InitProcess();
 
 			// Init statics for EXE
+#if defined(__EABI__) || defined(__ARM_EABI__)
+			__call_init_array();
+#else
 			TUint i=1;
 			while (__CTOR_LIST__[i])
 				(*__CTOR_LIST__[i++])();
+#endif
 
 			r = E32Main();
 			}

@@ -17,7 +17,9 @@ ifeq ($($(NAME)_$(PLATFORM_PATH)_bootstrap_flm),)
 $(NAME)_$(PLATFORM_PATH)_bootstrap_flm := 1 
 
 E32PATH := $(EXTENSION_ROOT)/$(E32PATH)
-SOURCES := $(foreach S,$(SOURCES),$(addprefix $(EXTENSION_ROOT)/,$(S)))
+EXTRA_SRC_PATH := $(foreach S,$(EXTRA_SRC_PATH),$(addprefix $(EXTENSION_ROOT)/,$(S)))
+find_src = $(firstword $(wildcard $(EXTENSION_ROOT)/$(1)) $(foreach dir,$(EXTRA_SRC_PATH),$(wildcard $(dir)/$(1))) $(EXTENSION_ROOT)/$(1))
+SOURCES := $(foreach S,$(SOURCES),$(call find_src,$(S)))
 INCLUDES2:=$(addprefix $(EXTENSION_ROOT)/,$(INCLUDES))
 EXTRA_INC_PATH := $(foreach S,$(EXTRA_INC_PATH),$(addprefix $(EXTENSION_ROOT)/,$(S)))
 GENINCLUDES_HEADERS := $(foreach H,$(GENINCLUDES_HEADERS),$(addprefix $(EXTENSION_ROOT)/,$(H)))
@@ -26,8 +28,12 @@ ifndef LINKBASE
 LINKBASE := 0x00000000
 endif
 
+ifndef GNUMD5SUM
+GNUMD5SUM := md5sum
+endif
+
 UNIQ:=$(E32PATH)$(PLATFORM_PATH)$(NAME)$(MEMMODEL)$(SOURCES)$(ASM_MACROS)
-UNIQ:=$(word 1,$(shell echo $(UNIQ) | $(GNUMD5SUM)))
+UNIQ:=$(word 1,$(shell echo '$(subst ','\'',$(UNIQ))' | $(GNUMD5SUM)))
 
 # Make the output build directory name unique, starting with NAME of the binary being built
 EPOCBLDABS := $(EPOCBLD)/$(NAME)_$(UNIQ)
@@ -82,10 +88,90 @@ ifneq ($(SMP),)
 ASM_MACROS := $(ASM_MACROS) SMP
 endif
 
-ASMINCPATHCMD := $(foreach dir,$(ASMINCPATH),$(join -I ,$(dir)))
+# Detect GCCE toolchain
+IS_GCC :=
+ifneq ($(GCCE),)
+IS_GCC := 1
+endif
+ifneq ($(findstring symbianelf,$(ASM)),)
+IS_GCC := 1
+endif
+ifneq ($(findstring g++,$(ASM)),)
+IS_GCC := 1
+endif
+ifneq ($(findstring gcc,$(ASM)),)
+IS_GCC := 1
+endif
+
 ASM_MACROS := $(ASM_MACROS) USE_CXSF
-      
+
+ifeq ($(IS_GCC),1)
+ASMTYP := AS
+INCEXT := ginc
+ASMINCPATHCMD := $(foreach dir,$(ASMINCPATH),-I$(dir))
+ASM_MACRO_CMD := $(foreach macro,$(ASM_MACROS),--defsym $(macro)=1)
+AFLAGS := -R $(ASM_MACRO_CMD) $(ASMINCPATHCMD)
+
+AS_BIN := $(patsubst %arm-none-symbianelf-g++,%arm-none-symbianelf-as,$(ASM))
+ifeq ($(AS_BIN),$(ASM))
+AS_BIN := arm-none-symbianelf-as
+endif
+LD_BIN := $(patsubst %arm-none-symbianelf-g++,%arm-none-symbianelf-ld,$(ASM))
+ifeq ($(LD_BIN),$(ASM))
+LD_BIN := arm-none-symbianelf-ld
+endif
+OBJCOPY_BIN := $(patsubst %arm-none-symbianelf-g++,%arm-none-symbianelf-objcopy,$(ASM))
+ifeq ($(OBJCOPY_BIN),$(ASM))
+OBJCOPY_BIN := arm-none-symbianelf-objcopy
+endif
+NM_BIN := $(patsubst %arm-none-symbianelf-g++,%arm-none-symbianelf-nm,$(ASM))
+ifeq ($(NM_BIN),$(ASM))
+NM_BIN := arm-none-symbianelf-nm
+endif
+
+define bootstrap_asm
+$(1) : $(2) : $(3)
+	$(call startrule,bootstrap_gcce_asm) \
+	$(PERL) $(EPOCROOT)/epoc32/tools/armasm2as.pl $$< $$(basename $$@).ss && \
+	$(AS_BIN) $(AFLAGS) -o $$@ $$(basename $$@).ss \
+	$(call endrule,bootstrap_gcce_asm)
+endef
+
+define bootstrap_link
+$(EPOCBLDABS)/$(NAME).in : $(LINKOBJECTS) | $(EPOCBLDABS)
+	$(call startrule,bootstrap_gcce_link) \
+	$(LD_BIN) -Ttext $(LINKBASE) -e ResetEntry -o $$@ $$(filter %.o,$$^) && \
+	$(NM_BIN) -C -n $$@ > $$(join $$(basename $$@),.sym) && \
+	$(GNUCP) $$(join $$(basename $$@),.sym) $$(join $$(basename $(TRG)),.sym) \
+	$(call endrule,bootstrap_gcce_link)
+endef
+
+define bootstrap_strip
+$(TRG) : $(EPOCBLDABS)/$(NAME).in
+	$(call startrule,bootstrap_strip) \
+	$(OBJCOPY_BIN) -O binary $$< $$@ \
+	$(call endrule,bootstrap_strip)
+endef
+
+define bootstrap_h2inc
+$(1) : $(2)
+	$(call startrule,bootstrap_h2inc) \
+	$(PERL) $(EPOCROOT)/epoc32/tools/h2inc.pl $$< $$@ $(ASMTYP) \
+	$(call endrule,bootstrap_h2inc)
+endef
+
+define bootstrap_inc2ginc
+$(1) : $(2)
+	$(call startrule,bootstrap_inc2ginc) \
+	$(PERL) $(EPOCROOT)/epoc32/tools/armasm2as.pl $$< $$@ \
+	$(call endrule,bootstrap_inc2ginc)
+endef
+
+else
+
+ASMTYP := ARMASM
 INCEXT := inc
+ASMINCPATHCMD := $(foreach dir,$(ASMINCPATH),$(join -I ,$(dir)))
 ASM_MACRO_CMD := $(foreach macro,$(ASM_MACROS),--predefine "$(macro) SETL {TRUE}")
 AFLAGS := -g --keep $(ASM_MACRO_CMD) $(ASMINCPATHCMD)
 LFLAGS := --ro-base $(LINKBASE) --entry $(LINKBASE) --map
@@ -117,9 +203,11 @@ define bootstrap_h2inc
 # How to translate the .h files to .inc
 $(1) : $(2)
 	$(call startrule,bootstrap_h2inc) \
-	$(PERL) $(EPOCROOT)/epoc32/tools/h2inc.pl $$< $$@ ARMASM \
-	$(call endrule, bootsrap_h2inc)
+	$(PERL) $(EPOCROOT)/epoc32/tools/h2inc.pl $$< $$@ $(ASMTYP) \
+	$(call endrule, bootstrap_h2inc)
 endef
+
+endif
 
 # Joins two lists with a 1:1 mapping, separated by a ->
 # $(call bootstrap_joinlists,a b c,d e f) returns a->d b->e c->f
@@ -137,12 +225,29 @@ HEADERS:= $(E32PATH)/eka/include/kernel/kernboot.h $(E32PATH)/eka/include/kernel
 
 # Generated include files
 BOOTSTRAP_GENINCLUDES := $(foreach f,$(HEADERS),$(basename $(notdir $(f))).$(INCEXT))
+FULLGENINCLUDES := $(addprefix $(EPOCBLDABS)/,$(BOOTSTRAP_GENINCLUDES))
 
 # Non-generated generic include files
 ifeq ($(BASEINCLUDES),)
 BASEINCLUDES := $(E32PATH)/eka/include/kernel/$(CPU)/bootcpu.inc $(E32PATH)/eka/include/kernel/$(CPU)/bootmacro.inc
 endif
+
+ifeq ($(IS_GCC),1)
+find_inc_file = $(firstword $(foreach dir,$(ASMINCPATH),$(wildcard $(dir)/$(1))))
+
+GEN_BASEINCLUDES := $(foreach f,$(BASEINCLUDES),$(EPOCBLDABS)/$(basename $(notdir $(f))).$(INCEXT))
+GEN_PLAT_INCLUDES := $(foreach f,$(INCLUDES),$(EPOCBLDABS)/$(basename $(f)).$(INCEXT))
+
+ALL_DEP_INCLUDES := $(FULLGENINCLUDES) $(GEN_BASEINCLUDES) $(GEN_PLAT_INCLUDES)
+CLEANTARGETS := $(CLEANTARGETS) $(GEN_BASEINCLUDES) $(GEN_PLAT_INCLUDES) $(FULLGENINCLUDES)
+
+$(foreach f,$(BASEINCLUDES),$(eval $(call bootstrap_inc2ginc,$(EPOCBLDABS)/$(basename $(notdir $(f))).$(INCEXT),$(f) | $(EPOCBLDABS))))
+$(foreach f,$(INCLUDES),$(eval $(call bootstrap_inc2ginc,$(EPOCBLDABS)/$(basename $(f)).$(INCEXT),$(call find_inc_file,$(f)) | $(EPOCBLDABS))))
+
+else
 INCLUDES2 := $(foreach f,$(INCLUDES2),$(basename $(f)).$(INCEXT))
+ALL_DEP_INCLUDES := $(BASEINCLUDES) $(FULLGENINCLUDES) $(INCLUDES2)
+endif
 
 # Generic object files
 FULLBASEOBJECTS := $(foreach src, $(BASESOURCES_NAMES), $(addprefix $(EPOCBLDABS)/,$(basename $(src)).o))
@@ -151,9 +256,6 @@ FULLBASEOBJECTS := $(foreach src, $(BASESOURCES_NAMES), $(addprefix $(EPOCBLDABS
 FULLOBJECTS := $(foreach src, $(SOURCES), $(addprefix $(EPOCBLDABS)/,$(basename $(notdir $(src))).o))
 
 LINKOBJECTS := $(FULLBASEOBJECTS) $(FULLOBJECTS)
-
-# Generated include files with paths
-FULLGENINCLUDES := $(addprefix $(EPOCBLDABS)/,$(BOOTSTRAP_GENINCLUDES))
 
 CLEANTARGETS := $(CLEANTARGETS) $(FULLBASEOBJECTS) $(FULLOBJECTS) $(LINKOBJECTS) $(FULLGENINCLUDES) 
 
@@ -170,11 +272,11 @@ CLEANTARGETS := $(CLEANTARGETS) $(LISTFILE)
 
 JOINED_BASEOBJECTS := $(call bootstrap_joinlists,$(FULLBASEOBJECTS),$(BASESOURCES))
 
-$(foreach J,$(JOINED_BASEOBJECTS),$(eval $(call bootstrap_asm,$(word 1,$(subst ->, ,$(J))),$(EPOCBLDABS)/%.o,$(word 2,$(subst ->, ,$(J))) $(BASEINCLUDES) $(FULLGENINCLUDES) $(INCLUDES2) | $(EPOCBLDABS))))
+$(foreach J,$(JOINED_BASEOBJECTS),$(eval $(call bootstrap_asm,$(word 1,$(subst ->, ,$(J))),$(EPOCBLDABS)/%.o,$(word 2,$(subst ->, ,$(J))) $(ALL_DEP_INCLUDES) | $(EPOCBLDABS))))
 
 JOINED_OBJECTS := $(call bootstrap_joinlists,$(FULLOBJECTS),$(SOURCES))
 
-$(foreach J,$(JOINED_OBJECTS),$(eval $(call bootstrap_asm,$(word 1,$(subst ->, ,$(J))),$(EPOCBLDABS)/%.o,$(word 2,$(subst ->, ,$(J))) $(BASEINCLUDES) $(FULLGENINCLUDES) $(INCLUDES2) |$(EPOCBLDABS))))
+$(foreach J,$(JOINED_OBJECTS),$(eval $(call bootstrap_asm,$(word 1,$(subst ->, ,$(J))),$(EPOCBLDABS)/%.o,$(word 2,$(subst ->, ,$(J))) $(ALL_DEP_INCLUDES) |$(EPOCBLDABS))))
 
 # How to link the object files
 $(eval $(bootstrap_link))

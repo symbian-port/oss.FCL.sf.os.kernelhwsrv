@@ -192,6 +192,15 @@ extern "C" EXPORT_C __NAKED__ TAny* memset(TAny* /*aTrg*/, TInt /*aValue*/, unsi
 	asm("__aeabi_memset: 		 ");
     asm("   and      r2, r2, #255");
 	asm("	b		 fill		 ");
+
+	asm(".global __aeabi_memclr8 ");
+	asm("__aeabi_memclr8: 		 ");
+	asm(".global __aeabi_memclr4 ");
+	asm("__aeabi_memclr4: 		 ");
+	asm(".global __aeabi_memclr  ");
+	asm("__aeabi_memclr: 		 ");
+	asm("   mov      r2, #0      ");
+	asm("	b		 fill		 ");
 #endif
     }
 
@@ -897,7 +906,7 @@ extern "C" EXPORT_C __NAKED__ TAny* memcpy(TAny* /*aTrg*/, const TAny* /*aSrc*/,
 
 
 #ifndef __KERNEL_MODE__
-#ifdef __GCC32__ 
+#if defined(__GCC32__) && !defined(__EABI__) 
 /**
 Compares a block of data at one specified location with a block of data at 
 another specified location.

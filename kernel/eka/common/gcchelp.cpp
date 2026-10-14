@@ -63,7 +63,7 @@ EXPORT_C void operator delete[](TAny* aPtr) __NO_THROW
 
 #endif //!defined(__X86__)
 
-#ifdef __ARMCC__
+#if defined(__ARMCC__) || defined(__GCCE__) || defined(__EABI__)
 
 EXPORT_C TAny* operator new(TUint aSize, const std::nothrow_t& aNoThrow) __NO_THROW
 //

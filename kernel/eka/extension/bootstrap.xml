@@ -9,6 +9,7 @@
 		<param name="NAME" />
 		<param name="MEMMODEL" />
 		<param name="EXTRA_INC_PATH" default=''/>
+		<param name="EXTRA_SRC_PATH" default=''/>
 		<param name="EXTRA_EPOC32_INC_PATH" default=''/>
 		<param name="SOURCES" />
 		<param name="INCLUDES" />

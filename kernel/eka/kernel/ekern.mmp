@@ -89,9 +89,9 @@ sourcepath				../common/arm
 source					carray.cia cdes8.cia cmem.cia
 #if defined(GCC32)
 source 					cgcchelp.cpp cgcchelp.cia
-#elif defined(ARMCC)
+#elif defined(ARMCC) || defined(GCCE)
 source					armcchlp.cpp
-#ifndef SBSV2
+#if !defined(SBSV2) && !defined(GCCE)
 source					armcchlp.cia
 #endif
 #endif

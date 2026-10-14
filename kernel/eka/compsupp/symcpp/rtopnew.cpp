@@ -17,6 +17,8 @@
 
 #include <e32std.h>
 #include <e32std_private.h>
+#undef __NO_THROW
+#define __NO_THROW throw()
 
 EXPORT_C TAny* operator new(TUint aSize) __NO_THROW
 //

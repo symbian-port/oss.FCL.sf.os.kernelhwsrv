@@ -46,6 +46,7 @@ EXPORT_C void* __ARM_get_typeid(void* p)
 // Create the type_info object for void.
 //
 
+#ifdef __ARMCC_VERSION
 extern const char * const  $Sub$$_ZTSv = "v";
 
 __asm void __rt_exporter_dummy()
@@ -64,6 +65,7 @@ __asm void __rt_exporter_dummy()
 	DCD _ZTVN10__cxxabiv123__fundamental_type_infoE
 	DCD _ZTSv
 	}
+#endif
 
 #if __ARMCC_VERSION > 400000
 asm void __symbian_prevent_export()

@@ -96,6 +96,7 @@
 #define CSM_Z30PanicOverUnderflowDividebyZeroi " __cpp(PanicOverUnderflowDividebyZero)"
 #define CSM_ZN8CServer27ConnectERK9RMessage2 " __cpp(CServer2::Connect)"
 #define CSM_ZN8CCleanup5CheckEPv " __cpp(&CCleanup::Check)"
+#define CSM_ZN2PP20InitSuperPageFromRom " __cpp(PP::InitSuperPageFromRom)"
 #else
 // CIA symbol macros for EABI assemblers
 #define CSM_ZN4Exec12PopTrapFrameEv " _ZN4Exec12PopTrapFrameEv"
@@ -130,6 +131,7 @@
 #define CSM_Z30PanicOverUnderflowDividebyZeroi " _Z30PanicOverUnderflowDividebyZeroi"
 #define CSM_ZN8CServer27ConnectERK9RMessage2 " _ZN8CServer27ConnectERK9RMessage2"
 #define CSM_ZN8CCleanup5CheckEPv " _ZN8CCleanup5CheckEPv"
+#define CSM_ZN2PP20InitSuperPageFromRom " _ZN2PP20InitSuperPageFromRomEmm"
 #endif
 
 // CIA symbols for KERNEL side code
@@ -196,6 +198,7 @@
 #define	CSM_ZN5NKern14_ThreadLeaveCSEv " _ThreadLeaveCS__5NKern"
 #define	CSM_ZN7DObject10AsyncCloseEv " AsyncClose__7DObject"
 #define CSM_ZN3EMI16CallStartHandlerEP7DThread " CallStartHandler__3EMIP7DThread"
+#define CSM_ZN19DKernelEventHandler8DispatchE12TKernelEventPvS1_ " Dispatch__19DKernelEventHandler12TKernelEventPvT2"
 #define CSM_ZN2KL5PanicENS_13TKernLibPanicE " Panic__2KLQ22KL13TKernLibPanic"
 #define CSM_ZN5NKern11FastCounterEv " FastCounter__5NKern"
 #define CSM_ZN4TDfc7DoEnqueEv " DoEnque__4TDfc"
@@ -307,6 +310,7 @@
 #define	CSM_ZN5NKern14_ThreadLeaveCSEv " __cpp(NKern::_ThreadLeaveCS)"
 #define	CSM_ZN7DObject10AsyncCloseEv " __cpp(DObject::AsyncClose)"
 #define CSM_ZN3EMI16CallStartHandlerEP7DThread " __cpp(EMI::CallStartHandler)"
+#define CSM_ZN19DKernelEventHandler8DispatchE12TKernelEventPvS1_ " __cpp(DKernelEventHandler::Dispatch)"
 #define CSM_ZN2KL5PanicENS_13TKernLibPanicE " __cpp(KL::Panic)"
 #define CSM_ZN5NKern11FastCounterEv " __cpp(NKern::FastCounter)"
 #define CSM_ZN4TDfc7DoEnqueEv " __cpp(TDfc::DoEnque)"
@@ -357,7 +361,7 @@
 #define CSM_ZN9RMessageK8CloseRefEv "__cpp(RMessageK::CloseRef)"
 #else
 // CIA symbol macros for EABI assemblers
-#define CSM_ZN1K8MsgInfoE " _ZN1K9MsgInfoE"
+#define CSM_ZN1K8MsgInfoE " _ZN1K7MsgInfoE"
 #define CSM_ZN14NFastSemaphore6SignalEv " _ZN14NFastSemaphore6SignalEv"
 #define CSM_ZN4Kern4ExitEi " _ZN4Kern4ExitEi"
 #define CSM_ZN5NKern4ExitEv " _ZN5NKern4ExitEv"
@@ -418,6 +422,7 @@
 #define	CSM_ZN5NKern14_ThreadLeaveCSEv " _ZN5NKern14_ThreadLeaveCSEv"
 #define	CSM_ZN7DObject10AsyncCloseEv " _ZN7DObject10AsyncCloseEv"
 #define CSM_ZN3EMI16CallStartHandlerEP7DThread " _ZN3EMI16CallStartHandlerEP7DThread"
+#define CSM_ZN19DKernelEventHandler8DispatchE12TKernelEventPvS1_ " _ZN19DKernelEventHandler8DispatchE12TKernelEventPvS1_"
 #define CSM_ZN2KL5PanicENS_13TKernLibPanicE " _ZN2KL5PanicENS_13TKernLibPanicE"
 #define CSM_ZN5NKern11FastCounterEv " _ZN5NKern11FastCounterEv"
 #define CSM_ZN4TDfc7DoEnqueEv " _ZN4TDfc7DoEnqueEv"
